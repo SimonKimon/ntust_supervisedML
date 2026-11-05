@@ -22,7 +22,7 @@ Facts from the UCI pages; everything marked *(check)* is still to be confirmed w
 | | ID 12 – Parkinsons Telemonitoring | ID 18 – Online News Popularity |
 |---|---|---|
 | UCI | [dataset 189](https://archive.ics.uci.edu/dataset/189/parkinsons+telemonitoring) | [dataset 332](https://archive.ics.uci.edu/dataset/332/online+news+popularity) |
-| Size | 5,875 recordings from 42 patients | ~39,800 articles |
+| Size | 5,875 recordings from 42 patients | 39,644 articles (CSV; the UCI page says 39,797) |
 | Features | 19 (age, sex, test_time, 16 voice measures) | 58 predictive (+ `url`, `timedelta`, not predictive) |
 | Target | `motor_UPDRS` or `total_UPDRS` (choose one, drop the other) | `shares` |
 | Missing values | none | none |
@@ -64,12 +64,21 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Download a dataset into `data/raw/` with the official UCI package:
+The datasets are not committed. Download both zips from the *Final Presentation* section on
+Moodle and unzip them so that you get:
+
+```
+data/raw/parkinsons_telemonitoring/parkinsons_updrs.data    # CSV with header, 5,875 rows x 22 columns
+data/raw/parkinsons_telemonitoring/parkinsons_updrs.names   # description
+data/raw/online_news_popularity/OnlineNewsPopularity.csv    # 39,644 rows x 61 columns
+data/raw/online_news_popularity/OnlineNewsPopularity.names  # description
+```
 
 ```python
-from ucimlrepo import fetch_ucirepo
-ds = fetch_ucirepo(id=189)   # 189 = Parkinsons Telemonitoring, 332 = Online News Popularity
-ds.data.original.to_csv("data/raw/parkinsons_telemonitoring.csv", index=False)
+import pandas as pd
+df = pd.read_csv("data/raw/parkinsons_telemonitoring/parkinsons_updrs.data")
+# Online News: column names in the CSV start with a space -> skipinitialspace=True
+news = pd.read_csv("data/raw/online_news_popularity/OnlineNewsPopularity.csv", skipinitialspace=True)
 ```
 
 ## Working together
